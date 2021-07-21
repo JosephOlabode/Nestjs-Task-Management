@@ -29,11 +29,14 @@ export class TasksService {
   }
 
   updateTaskById(id: string, status: TaskStatus): Task {
-    const index = this.tasks.findIndex((task) => task.id === id);
-    if (index !== -1) {
-      this.tasks[index].status = status;
-      return this.tasks[index];
-    }
+    // const index = this.tasks.findIndex((task) => task.id === id);
+    // if (index !== -1) {
+    //   this.tasks[index].status = status;
+    //   return this.tasks[index];
+    // }
+    const task = this.getTaskById(id);
+    task.status = status;
+    return task;
   }
 
   deleteTaskById(id: string): void {
