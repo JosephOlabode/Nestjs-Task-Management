@@ -12,6 +12,10 @@ export class TasksService {
     @InjectRepository(TaskRepository)
     private taskRepository: TaskRepository,
   ) {}
+
+  async getTasks(filterDto: GetTaskFilterDto): Promise<Task[]> {
+    return this.taskRepository.getTasks(filterDto);
+  }
   // getAllTasks(): Task[] {
   //   return this.tasks;
   // }
@@ -44,20 +48,12 @@ export class TasksService {
     return this.taskRepository.createTask(createTaskDto);
   }
 
-  // updateTaskById(id: string, status: TaskStatus): Task {
-  //   // const index = this.tasks.findIndex((task) => task.id === id);
-  //   // if (index !== -1) {
-  //   //   this.tasks[index].status = status;
-  //   //   return this.tasks[index];
-  //   // }
-  //   const task = this.getTaskById(id);
-  //   task.status = status;
-  //   return task;
-  // }
-  // deleteTaskById(id: string): void {
-  //   const found = this.getTaskById(id);
-  //   this.tasks = this.tasks.filter((task) => task.id !== found.id);
-  // }
+  async updateTaskById(id: number, status: TaskStatus): Promise<Task> {
+    const task = await this.getTaskById(id);
+    task.status = status;
+    await task.save();
+    return task;
+  }
 
   async deleteTaskById(id: number): Promise<void> {
     // const found = await this.getTaskById(id);
