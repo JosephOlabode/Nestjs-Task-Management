@@ -18,13 +18,25 @@ export class UserRepository extends Repository<User> {
     user.password = await this.hashPassword(password, salt);
     user.salt = salt;
     try {
-      // await user.save();
+      await user.save();
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException('Username already exist');
       } else {
         throw new InternalServerErrorException();
       }
+    }
+  }
+  async validateUserPassword(
+    authCredentialsDto: AuthCredentialsDto,
+  ): Promise<string> {
+    const { username, password } = authCredentialsDto;
+    const user = await this.findOne(username);
+
+    if (user && (await user.validateUserPassword(password))) {
+      return username;
+    } else {
+      return null;
     }
   }
 
